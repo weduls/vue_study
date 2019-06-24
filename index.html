@@ -10,18 +10,49 @@
         <button>전역 컴포넌트 등록</button>
         <custom-component></custom-component>
         <local-custom-component></local-custom-component>
+
+        <child-component v-bind:propsData="parentpropsdata"></child-component>
     </div>
 
     <div id="app2">
         <custom-component></custom-component>
+        <child-event-component v-on:show-log="printText"></child-event-component>
+
+        <send-equal-level-component></send-equal-level-component>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.js"></script>
     <script>
+        const eventBus = new Vue();
         Vue.component('custom-component', {
             // 컴포넌트 내용안에는 HTML 태그가 실제로 화면에 그려 질 때 표시될 내용을 작성해야 한다.
             // 아래와 같이 작성하면 최종적으로 div 태그가 만들어진디ㅏ.
             template: '<div>전역 컴포넌트가 등록되었습니다.</div>'
+        });
+
+        // 속성 값 상위에서 받는 컴포넌트
+        Vue.component('child-component', {
+            props: ['propsdata'],
+            template: '<p>{{ propsdata }}</p>'
+        });
+
+        // 이벤트 하위에서 위로 전달.
+        Vue.component('child-event-component', {
+            template: '<button v-on:click="showLog">show log</button>',
+            methods: {
+                showLog: function() {
+                    this.$emit('show-log');
+                }
+            }
+        });
+
+        Vue.component('send-equal-level-component', {
+            template: '<button v-on:click="showLog">동급레벨에 이벤트 전달</button>',
+            methods: {
+                showLog: function() {
+                    eventBus.$emit('triggerEventBus', 100);
+                }
+            },
         });
 
         new Vue({
@@ -32,7 +63,8 @@
                 }
             },
             data: {
-                message: 'Hello Vue.js'
+                message: 'Hello Vue.js',
+                parentpropsdata: '이것이 상위에서 전달하는 데이터다.'
             },
             beforeCreate() {
                 console.log('before create');
@@ -60,6 +92,16 @@
             el: '#app2',
             data: {
 
+            },
+            methods: {
+                printText: function() {
+                    console.log('이것이 이벤트 전달이다.');
+                }
+            },
+            created: function() {
+                eventBus.$on('triggerEventBus', function(value) {
+                    console.log('이벤트 전달 받음', value);
+                });
             }
         });
     </script>
