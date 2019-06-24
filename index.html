@@ -14,6 +14,26 @@
             el: '#app',
             data: {
                 message: 'Hello Vue.js'
+            },
+            beforeCreate() {
+                console.log('before create');
+            },
+            created() {
+                console.log('created');
+            },
+            mounted() {
+                console.log('mounted');
+                // 인스턴스가 붙고 데이터가 아직 update되기 전
+                this.message = 'Hi cjung';
+            },
+            beforeUpdate() {
+                // before updated는 데이터가 변경되고 나서 반영될 때, 호출되기 때문에 mounted()에 정의한 this.message와 같이 데이터 변경이 없었으면 호출안함.
+                console.log('before Update');
+            },
+            updated() {
+                // 인스턴스가 마운트 되고 데이터가 변경되고 난 후 호출 됨
+                // updated는 데이터가 변경되고 나서 반영될 때, 호출되기 때문에 mounted()에 정의한 this.message와 같이 데이터 변경이 없었으면 호출안함.
+                console.log('updated')
             }
         });
     </script>
