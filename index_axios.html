@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>같은 레벨에 여러 컴포넌트가 함께 떠있는 구조</title>
+</head>
+
+<body>
+    <div id="app">
+        <button v-on:click="getData">프레임워크 목록 가져오기</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            methods: {
+                getData: function() {
+                    axios.get('https://www.naver.com').then(function(response) {
+                        console.log(response);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
